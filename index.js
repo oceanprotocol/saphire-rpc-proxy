@@ -36,7 +36,10 @@ app.post('/', async (req, res) => {
       res.status(200).json({ id, jsonrpc: '2.0', result }).end();
     }
     catch(error){
-      console.error("*******************************\nFailed call for request "+id+":\n"+JSON.stringify(p1)+"\nBlock:"+callBlock+"\n Error:\n"+JSON.stringify(error)+"*******************************\n")
+      console.error("*******************************\nFailed call for request "+id+":\n")
+      console.log(req.body)
+      console.log("\nArgs:\n")
+      console.log(JSON.stringify(p1)+"\nBlock:"+callBlock+"\n Error:\n"+JSON.stringify(error)+"*******************************\n")
       res.status(500).json(error).end();
     }
   } else {
