@@ -18,7 +18,10 @@ app.post('/', async (req, res) => {
   let result;
   let { id, method, params } = req.body;
   if (method === 'eth_call') {
-    const { gas, ...txCall } = params[0];
+    //const { gas, ...txCall } = params[0];
+    const gas = params[0]['gas']
+    const to = params[0]['to']
+    const data = params[0]['data']
     let callBlock = "latest"
     if (archiveNode){
       if (useBlockNo){
@@ -29,8 +32,7 @@ app.post('/', async (req, res) => {
         callBlock = params[1]["blockHash"]
       }
     }
-    const p1={ from: ethers.constants.AddressZero, ...txCall }
-    
+    const p1={ from: ethers.constants.AddressZero, to: to, data: data }
     try{
       result = await provider.call(p1, callBlock);
       res.status(200).json({ id, jsonrpc: '2.0', result }).end();
