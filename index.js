@@ -60,8 +60,15 @@ app.post('/', async (req, res) => {
       res.status(500).json(error).end();
     }
   } else {
-    result = await provider.send(method, params);
-    res.status(200).json({ id, jsonrpc: '2.0', result }).end();
+    try{
+      result = await provider.send(method, params);
+      res.status(200).json({ id, jsonrpc: '2.0', result }).end();
+    }
+    catch(error){
+      console.error("*******************************\nFailed call for request "+id+":\n")
+      console.log(req.body)
+      res.status(500).json(error).end();
+    }
   }
 });
 
