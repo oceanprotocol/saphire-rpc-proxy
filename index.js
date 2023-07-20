@@ -5,7 +5,8 @@ import express from 'express';
 const app = express();
 app.use(express.json());
 
-const provider = sapphire.wrap(new ethers.providers.JsonRpcBatchProvider(process.env.RPC));
+//const provider = sapphire.wrap(new ethers.providers.JsonRpcBatchProvider(process.env.RPC));
+const provider = new ethers.providers.JsonRpcBatchProvider(process.env.RPC);
 const archiveNode = process.env.ARCHIVE_NODE ==='true' ? true: false
 const useBlockNo = process.env.USE_BLOCK_NO === 'true' ? true: false
 console.log("Starting with archiveNode:"+archiveNode+" and useBlockNo:"+useBlockNo)
@@ -52,7 +53,10 @@ app.post('/', async (req, res) => {
       console.error("*******************************\nFailed call for request "+id+":\n")
       console.log(req.body)
       console.log("\nArgs:\n")
-      console.log(JSON.stringify(p1)+"\nBlock:"+callBlock+"\n Error:\n"+JSON.stringify(error)+"*******************************\n")
+      console.log(p1)
+      console.log("\nBlock:"+callBlock+"\n Error:\n")
+      console.log(error)
+      console.log("*******************************\n")
       res.status(500).json(error).end();
     }
   } else {
