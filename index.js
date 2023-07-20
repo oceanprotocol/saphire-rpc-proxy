@@ -6,8 +6,9 @@ const app = express();
 app.use(express.json());
 
 const provider = sapphire.wrap(new ethers.providers.JsonRpcBatchProvider(process.env.RPC));
-const archiveNode = process.env.ARCHIVE_NODE ? true: false
-const useBlockNo = process.env.USE_BLOCK_NO ? true: false
+const archiveNode = process.env.ARCHIVE_NODE ==='true' ? true: false
+const useBlockNo = process.env.USE_BLOCK_NO === 'true' ? true: false
+console.log("Starting with archiveNode:"+archiveNode+" and useBlockNo:"+useBlockNo)
 app.post('/', async (req, res) => {
   if (req.body.jsonrpc !== '2.0') {
     res.status(405).end();
@@ -35,7 +36,7 @@ app.post('/', async (req, res) => {
       res.status(200).json({ id, jsonrpc: '2.0', result }).end();
     }
     catch(error){
-      console.error("*******************************\nFailed call for request "+id+":\n"+JSON.stringify(p1)+"\n Error:\n"+JSON.stringify(error)+"*******************************\n")
+      console.error("*******************************\nFailed call for request "+id+":\n"+JSON.stringify(p1)+"\nBlock:"+callBlock+"\n Error:\n"+JSON.stringify(error)+"*******************************\n")
       res.status(500).json(error).end();
     }
   } else {
