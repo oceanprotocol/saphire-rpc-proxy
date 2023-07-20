@@ -19,17 +19,28 @@ app.post('/', async (req, res) => {
   let { id, method, params } = req.body;
   if (method === 'eth_call') {
     //const { gas, ...txCall } = params[0];
-    const gas = params[0]['gas']
-    const to = params[0]['to']
-    const data = params[0]['data']
+    let gas=null
+    let to=null
+    let data=null
+    let blockHash=null
+    for (const param of params){
+      if ("gas" in param && gas===null)
+        gas = param['gas']
+      if ("to" in param && to===null)
+        to = param['to']
+      if ("data" in param && data===null)
+        data = param['data']
+      if ("blockHash" in param && blockHash===null)
+        blockHash = param['blockHash']
+    }
     let callBlock = "latest"
     if (archiveNode){
       if (useBlockNo){
-        const fullblock = await provider.getBlock(params[1]["blockHash"])
+        const fullblock = await provider.getBlock(blockHash)
         callBlock = fullblock["number"]
       }
       else{
-        callBlock = params[1]["blockHash"]
+        callBlock = blockHash
       }
     }
     const p1={ from: ethers.constants.AddressZero, to: to, data: data }
